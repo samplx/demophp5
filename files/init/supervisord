@@ -2,6 +2,6 @@
 
 set -e
 
-run-parts --exit-on-error -v --report /hooks/supervisord-pre.d
+run-parts --exit-on-error -v --report /init/hooks/supervisor.d
 
 exec /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf -e ${SUPERVISORD_LOGLEVEL:-error}

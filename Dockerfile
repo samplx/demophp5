@@ -6,18 +6,9 @@ RUN git clone https://github.com/1and1internet/supervisorgo.git . \
     && go build -o release/supervisorgo \
     && echo "supervisorgo successfully built"
 
-FROM golang as configurability
-WORKDIR /go/src/github.com/1and1internet/configurability
-RUN git clone https://github.com/1and1internet/configurability.git . \
-    && make main \
-    && make mysql \
-    && echo "configurator successfully built"
-
 FROM php:5-apache
 COPY files/ /
 COPY --from=supervisorgo /go/src/github.com/1and1internet/supervisorgo/release/supervisorgo /usr/bin/supervisorgo
-COPY --from=configurability /go/src/github.com/1and1internet/configurability/bin/configurator /usr/bin/configurator
-COPY --from=configurability /go/src/github.com/1and1internet/configurability/bin/plugins/mysql.so /opt/configurability/goplugins
 
 RUN \
     export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \

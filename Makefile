@@ -1,14 +1,17 @@
 #
 # Simple Makefile to help maintain the Docker image
 #
+
 IMAGE_NAME = demophp5
 BASE_IMAGES = golang php:5-apache
 TEST_IMAGES =
 DOCKER_SOCKET = /var/run/docker.sock
 DOCKER = docker
+DOCKER_ID = samplx
+TAG_NAME = latest
 BUILD_ARGS = --rm
 
-all: pull build check 
+all: pull build check
 
 pull:
 	##
@@ -22,7 +25,7 @@ build:
 	##
 	## Starting build of image ${IMAGE_NAME}
 	##
-	${DOCKER} build ${BUILD_ARGS} --tag ${IMAGE_NAME} .
+	${DOCKER} build ${BUILD_ARGS} --tag ${DOCKER_ID}/${IMAGE_NAME}:${TAG_NAME} .
 
 check:
 	@echo 'Currently there is no test suite.'
@@ -36,5 +39,8 @@ clean:
 		do docker rmi $${IMAGE}; \
 	done
 
-.PHONY: all pull build check clean
+install:
+	${DOCKER} push ${DOCKER_ID}/${IMAGE_NAME}:${TAG_NAME}
+
+.PHONY: all pull build check clean install
 

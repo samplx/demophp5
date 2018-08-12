@@ -165,7 +165,7 @@ EOSQL
     function initdb_scripts {
 
         echo
-        for f in /docker-entrypoint-initdb.d/*; do
+        for f in /init/initdb.d/*; do
             case "$f" in
                 *.sh)     echo "$0: running $f"; . "$f" ;;
                 *.sql)    echo "$0: running $f"; "${mysql[@]}" < "$f"; echo ;;
@@ -179,7 +179,7 @@ EOSQL
     function set_user_to_expired {
 
         local USERNAME=$1
-        
+
         mysql --version 2> /dev/null | grep -q MariaDB
         if [ "$?" -eq 0 ]
         then
@@ -193,9 +193,6 @@ EOSQL
     }
 
     function stop_mysql {
-        echo "stop_mysql: pid=$pid"
-        ps fauxww
-        echo 'pgrep mysqld='"$(pgrep -x -umysql mysqld)"
         if pkill -x -umysql --signal TERM mysqld
         then
             echo "Shutdown temporary MySQL instance."
@@ -203,8 +200,6 @@ EOSQL
             echo >&2 'FAILURE: MySQL setup process failed while stopping mysql instance.'
         fi
         sleep 2
-        echo "stop_mysql: after pkill"
-        ps fauxww
     }
 
     ###################################################################
