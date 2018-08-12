@@ -1,0 +1,16 @@
+#!/bin/bash
+
+[ -z $SMTP_DOMAIN ] && SMTP_DOMAIN=localhost
+
+/bin/rm -f /etc/ssmtp/ssmtp.conf
+
+/bin/cat <<EOF > /etc/ssmtp/ssmtp.conf
+mailhub=${SMTP_RELAYHOST}
+hostname=${SMTP_DOMAIN}
+rewriteDomain=${SMTP_DOMAIN}
+UseTLS=Yes
+UseSTARTTLS=Yes
+AuthUser=${SMTP_USER}
+AuthPass=${SMTP_PASS}
+FROMLineOverride=yes
+EOF
